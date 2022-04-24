@@ -5,13 +5,41 @@ from PyQt6.QtCore import Qt
 import mysql.connector
 
 
-#con = mysql.connector.connect(host='project-kivia.cobnqddvfwys.us-east-1.rds.amazonaws.com',
-#database='dev_uiq',
-#user='mvictordb',
-#password='Victor2004')
+class BackEnd():
+    def connecting_db(self):
+        self.connect = mysql.connector.connect(host='project-kivia.cobnqddvfwys.us-east-1.rds.amazonaws.com', 
+            database='project_login', 
+            user='mvictordb', 
+            password='Victor2004'
+        )
+        self.cursor = self.connect.cursor()
+    
+    def disconnecting_db(self):
+        self.connect.close()
 
+    def variables(self):
+        self.user = self.user_registration.get()
+        self.email = self.email_registration.get()
+        self.password = self.password_registration.get()
 
-class FrontEnd():
+    def new_account(self):
+        self.connecting_db()
+        self.variables()
+        self.cursor.execute("""
+            insert into cadastrados(usuario, email, senha)
+            values (?, ?, ?)
+            """,
+            (
+                self.user,
+                self.email,
+                self.password
+            )
+            )
+        self.connect.commit()
+        self.disconnecting_db()
+        print('tudo certo')
+
+class FrontEnd(BackEnd):
     def __init__(self):
         super().__init__()
         self.create_window()
@@ -55,6 +83,7 @@ class FrontEnd():
             'font-size: 17px;')
         self.user_registration.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.user_registration.setPlaceholderText('Create a user')
+        self.user_registration.setMaxLength(10)
         self.user_registration.setGeometry(50, 150, 300, 40)
         self.user_registration.show()
 
@@ -70,18 +99,19 @@ class FrontEnd():
         self.email_registration.setGeometry(50, 220, 300, 40)
         self.email_registration.show()
 
-        self.senha_registration = QLineEdit('', self.register)
-        self.senha_registration.setStyleSheet(
+        self.password_registration = QLineEdit('', self.register)
+        self.password_registration.setStyleSheet(
             'background-color: white;'
             'color: gray;'
             'border-radius: 20px;'
             'font: "Times New Roman";'
             'font-size: 17px;')
-        self.senha_registration.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.senha_registration.setPlaceholderText('Password')
-        self.senha_registration.setEchoMode(QLineEdit.EchoMode.Password)
-        self.senha_registration.setGeometry(50, 290, 300, 40)
-        self.senha_registration.show()
+        self.password_registration.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.password_registration.setPlaceholderText('Password')
+        self.password_registration.setEchoMode(QLineEdit.EchoMode.Password)
+        self.password_registration.setMaxLength(8)
+        self.password_registration.setGeometry(50, 290, 300, 40)
+        self.password_registration.show()
 
         self.create_user = QPushButton('C R E A T E', self.register)
         self.create_user.setStyleSheet(
@@ -92,6 +122,7 @@ class FrontEnd():
             'font-size: 15px'
         )
         self.create_user.setGeometry(150, 360, 100, 40)
+        self.create_user.clicked.connect(self.new_account)
         self.create_user.show()
 
 
@@ -116,6 +147,7 @@ class FrontEnd():
             'font-size: 17px;')
         self.user_login.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.user_login.setPlaceholderText('User')
+        self.user_login.setMaxLength(10)
         self.user_login.setGeometry(50, 150, 300, 40)
 
         #Receive the password
@@ -129,6 +161,7 @@ class FrontEnd():
         self.password_login.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.password_login.setPlaceholderText('Password')
         self.password_login.setEchoMode(QLineEdit.EchoMode.Password)
+        self.password_login.setMaxLength(8)
         self.password_login.setGeometry(50, 220, 300, 40)
 
         #login

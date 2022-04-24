@@ -17,27 +17,54 @@ class BackEnd():
     def disconnecting_db(self):
         self.connect.close()
 
+    def clear_editext_register(self):
+        self.user_registration.clear()
+        self.email_registration.clear()
+        self.password_registration.clear()
+
     def variables(self):
-        self.user = self.user_registration.get()
-        self.email = self.email_registration.get()
-        self.password = self.password_registration.get()
+        self.user = self.user_registration.text()
+        self.email = self.email_registration.text()
+        self.password = self.password_registration.text()
 
     def new_account(self):
         self.connecting_db()
         self.variables()
         self.cursor.execute("""
             insert into cadastrados(usuario, email, senha)
-            values (?, ?, ?)
+            values (%s, %s, %s)
             """,
             (
                 self.user,
                 self.email,
                 self.password
             )
-            )
-        self.connect.commit()
+        )
+        self.connect.commit(),
+        self.clear_editext_register()
         self.disconnecting_db()
-        print('tudo certo')
+        
+        self.confirmation = QLabel('✔️ Registered user', self.register)
+        self.confirmation.setStyleSheet(
+            'background-color: none;'
+            'color: #4F4F4F;'
+            'font-size: 15px;'
+        )
+        self.confirmation.setGeometry(110, 410, 210, 50)
+        self.confirmation.show()
+
+        self.sigin_registred = QPushButton('Sig Up', self.register)
+        self.sigin_registred.setStyleSheet(
+            'border: none;'
+            'background-color: none;'
+            'color: white;'
+            'font: "Helvetica";'
+            'font-size: 15px;'
+        )
+        self.sigin_registred.setGeometry(210, 411, 100, 50)
+        self.sigin_registred.clicked.connect(lambda: self.register.close())
+        self.sigin_registred.show()
+
 
 class FrontEnd(BackEnd):
     def __init__(self):

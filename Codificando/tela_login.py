@@ -30,41 +30,122 @@ class BackEnd():
     def new_account(self):
         self.connecting_db()
         self.variables()
-        self.cursor.execute("""
-            insert into cadastrados(usuario, email, senha)
-            values (%s, %s, %s)
-            """,
-            (
-                self.user,
-                self.email,
-                self.password
+
+        if self.user == '':
+            self.insert_something = QLabel('Please enter a username.', self.register)
+            self.insert_something.setStyleSheet(
+                'background-color: #01E1FD;'
+                'color: #4F4F4F;'
+                'font-size: 15px;'
             )
-        )
-        self.connect.commit(),
-        self.clear_editext_register()
-        self.disconnecting_db()
-        
-        self.confirmation = QLabel('✔️ Registered user', self.register)
-        self.confirmation.setStyleSheet(
-            'background-color: none;'
-            'color: #4F4F4F;'
-            'font-size: 15px;'
-        )
-        self.confirmation.setGeometry(110, 410, 210, 50)
-        self.confirmation.show()
+            self.insert_something.setGeometry(90, 430, 250, 30)
+            self.insert_something.show()
 
-        self.sigin_registred = QPushButton('Sig Up', self.register)
-        self.sigin_registred.setStyleSheet(
-            'border: none;'
-            'background-color: none;'
-            'color: white;'
-            'font: "Helvetica";'
-            'font-size: 15px;'
-        )
-        self.sigin_registred.setGeometry(210, 411, 100, 50)
-        self.sigin_registred.clicked.connect(lambda: self.register.close())
-        self.sigin_registred.show()
+        elif self.email == '':
+            self.insert_something_i = QLabel('Please enter a valid email address.', self.register)
+            self.insert_something_i.setStyleSheet(
+                'background-color: #01E1FD;'
+                'color: #4F4F4F;'
+                'font-size: 15px;'
+            )
+            self.insert_something_i.setGeometry(90, 430, 250, 30)
+            self.insert_something_i.show()
 
+        elif self.password == '':
+            self.insert_something_ii = QLabel('Please enter a password.', self.register)
+            self.insert_something_ii.setStyleSheet(
+                'background-color: #01E1FD;'
+                'color: #4F4F4F;'
+                'font-size: 15px;'
+            )
+            self.insert_something_ii.setGeometry(90, 430, 250, 30)
+            self.insert_something_ii.show()
+
+        else:
+
+            self.cursor.execute("""
+                insert into cadastrados(usuario, email, senha)
+                values (%s, %s, %s)
+                """,
+                (
+                    self.user,
+                    self.email,
+                    self.password
+                )
+            )
+            self.connect.commit(),
+            self.clear_editext_register()
+            self.disconnecting_db()
+            
+            self.confirmation = QLabel('✔️ Registered user!', self.register)
+            self.confirmation.setStyleSheet(
+                'background-color: #01E1FD;'
+                'color: #4F4F4F;'
+                'font-size: 15px;'
+            )
+            self.confirmation.setGeometry(90, 430, 210, 30)
+            self.confirmation.show()
+
+            self.sigin_registred = QPushButton('Sig Up', self.register)
+            self.sigin_registred.setStyleSheet(
+                'border: none;'
+                'background-color: #01E1FD;'
+                'color: white;'
+                'font: "Helvetica";'
+                'font-size: 15px;'
+            )
+            self.sigin_registred.setGeometry(220, 431, 100, 30)
+            self.sigin_registred.clicked.connect(lambda: self.register.close())
+            self.sigin_registred.show()
+
+    def frame_confirmation(self):
+        self.confirmation_login = QFrame(self.window)
+        self.confirmation_login.resize(400, 500)
+        self.confirmation_login.setStyleSheet('background-color: qlineargradient(spread:pad, x1:0.484, y1:0, x2:0.521, y2:1, stop:0 rgba(0, 170, 250, 255), stop:1 rgba(0, 232, 254, 255));')
+        self.confirmation_login.show()
+
+        self.verific = QLabel('Congratulations', self.confirmation_login)
+        self.verific.setStyleSheet(
+            'background-color: none;'
+            'color: #E0FFFF;'
+            'font-size: 25px;'
+            'font: Regular "Times New Roman";'
+        )
+        self.verific.setGeometry(120, 70, 160, 50)
+        self.verific.show()
+
+    def validate_user(self):
+        self.connecting_db()
+        self.user_typed = self.user_login.text()
+        self.password_typed = self.password_login.text()
+
+        if self.user_typed == '':
+            print('digite')
+        elif self.password_typed == '':
+            print('digite')
+        else:
+            try:
+                self.cursor.execute(f"""
+                        select senha from cadastrados where usuario = '{self.user_typed}'
+                    """)
+                self.password_db = self.cursor.fetchall()
+
+                if self.password_typed == self.password_db[0][0]:
+                    self.frame_confirmation()
+                else:
+                    print('error')
+            except:
+                self.incorret = QLabel('Incorrect password or username', self.window)
+                self.incorret.setStyleSheet(
+                    'background-color: none;'
+                    'color: red;'
+                    'border-radius: 20px;'
+                    'font-size: 15px;'
+                )
+                self.incorret.setGeometry(95, 110, 250, 50)
+                self.incorret.show()
+
+            self.disconnecting_db()
 
 class FrontEnd(BackEnd):
     def __init__(self):
@@ -152,7 +233,6 @@ class FrontEnd(BackEnd):
         self.create_user.clicked.connect(self.new_account)
         self.create_user.show()
 
-
     def frame_login(self):
         ##title
         self.title = QLabel('W E L C O M E', self.window)
@@ -200,6 +280,7 @@ class FrontEnd(BackEnd):
             'font: bold "Verdana";' 
             'font-size: 15px'
         )
+        self.button_login.clicked.connect(self.validate_user)
         self.button_login.setGeometry(70, 330, 100, 40)
 
         #No account label and button

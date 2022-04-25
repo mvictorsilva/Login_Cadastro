@@ -31,63 +31,50 @@ class BackEnd():
         self.connecting_db()
         self.variables()
 
-        try:
-            self.cursor.execute("""
-                insert into cadastrados(usuario, email, senha)
-                values (%s, %s, %s)
-                """,
-                (
-                    self.user,
-                    self.email,
-                    self.password
-                )
-            )
-            self.connect.commit(),
-            self.clear_editext_register()
-            self.disconnecting_db()
-                
-            self.confirmation = QLabel('✔️ Registered user!', self.register)
-            self.confirmation.setStyleSheet(
-                'background-color: #01E1FD;'
+        while self.user == '' and self.email == '' and self.password == '':
+            self.insert_something = QLabel('Campos vazios', self.register)
+            self.insert_something.setStyleSheet(
+                'background-color: none;'
                 'color: #4F4F4F;'
                 'font-size: 15px;'
             )
-            self.confirmation.setGeometry(90, 430, 210, 30)
-            self.confirmation.show()
+            self.insert_something.setGeometry(110, 410, 210, 50)
+            self.insert_something.show()
 
-            self.sigin_registred = QPushButton('Sig Up', self.register)
-            self.sigin_registred.setStyleSheet(
-                'border: none;'
-                'background-color: #01E1FD;'
-                'color: white;'
-                'font: "Helvetica";'
-                'font-size: 15px;'
+        self.cursor.execute("""
+            insert into cadastrados(usuario, email, senha)
+            values (%s, %s, %s)
+            """,
+            (
+                self.user,
+                self.email,
+                self.password
             )
-            self.sigin_registred.setGeometry(220, 431, 100, 30)
-            self.sigin_registred.clicked.connect(lambda: self.register.close())
-            self.sigin_registred.show()
-        except:
-            print('error')
+        )
+        self.connect.commit(),
+        self.clear_editext_register()
+        self.disconnecting_db()
+        
+        self.confirmation = QLabel('✔️ Registered user', self.register)
+        self.confirmation.setStyleSheet(
+            'background-color: none;'
+            'color: #4F4F4F;'
+            'font-size: 15px;'
+        )
+        self.confirmation.setGeometry(110, 410, 210, 50)
+        self.confirmation.show()
 
-    def validate_user(self):
-        try:
-            self.connecting_db()
-            self.user_typed = self.user_login.text()
-            self.password_typed = self.password_login.text()
-
-            self.cursor.execute(f"""
-            select senha from cadastrados where usuario = '{self.user_typed}'
-            """)
-            self.password_db = self.cursor.fetchall()
-
-            if self.password_typed == self.password_db[0][0]:
-                print('login efetuado')
-            else:
-                print('dado incorreto')
-
-            self.disconnecting_db()
-        except:
-            print('error')
+        self.sigin_registred = QPushButton('Sig Up', self.register)
+        self.sigin_registred.setStyleSheet(
+            'border: none;'
+            'background-color: none;'
+            'color: white;'
+            'font: "Helvetica";'
+            'font-size: 15px;'
+        )
+        self.sigin_registred.setGeometry(210, 411, 100, 50)
+        self.sigin_registred.clicked.connect(lambda: self.register.close())
+        self.sigin_registred.show()
 
 class FrontEnd(BackEnd):
     def __init__(self):
@@ -222,7 +209,6 @@ class FrontEnd(BackEnd):
             'font: bold "Verdana";' 
             'font-size: 15px'
         )
-        self.button_login.clicked.connect(self.validate_user)
         self.button_login.setGeometry(70, 330, 100, 40)
 
         #No account label and button

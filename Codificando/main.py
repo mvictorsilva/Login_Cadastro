@@ -8,10 +8,6 @@ import mysql.connector
 class BackEnd():
     def connecting_db(self):
         self.connect = mysql.connector.connect(
-            host='project-kivia.cobnqddvfwys.us-east-1.rds.amazonaws.com', 
-            database='project_login', 
-            user='mvictordb', 
-            password='Victor2004'
         )
         self.cursor = self.connect.cursor()
     

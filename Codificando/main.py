@@ -11,18 +11,22 @@ class BackEnd():
         )
         self.cursor = self.connect.cursor()
     
+
     def disconnecting_db(self):
         self.connect.close()
+
 
     def clear_editext_register(self):
         self.user_registration.clear()
         self.email_registration.clear()
         self.password_registration.clear()
 
+
     def variables(self):
         self.user = self.user_registration.text()
         self.email = self.email_registration.text()
         self.password = self.password_registration.text()
+
 
     def new_account(self):
         self.connecting_db()
@@ -95,6 +99,7 @@ class BackEnd():
             self.sigin_registred.clicked.connect(lambda: self.register.close())
             self.sigin_registred.show()
 
+
     def frame_confirmation(self):
         self.confirmation_login = QFrame(self.window)
         self.confirmation_login.resize(400, 500)
@@ -110,6 +115,7 @@ class BackEnd():
         )
         self.verific.setGeometry(120, 70, 160, 50)
         self.verific.show()
+
 
     def validate_user(self):
         self.connecting_db()
@@ -144,6 +150,7 @@ class BackEnd():
 
             self.disconnecting_db()
 
+
 class FrontEnd(BackEnd):
     def __init__(self):
         super().__init__()
@@ -153,6 +160,7 @@ class FrontEnd(BackEnd):
         self.window.show()
         self.main_window.exec()
 
+
     def create_window(self):
         self.main_window = QApplication(sys.argv)
         self.window = QWidget()
@@ -161,6 +169,7 @@ class FrontEnd(BackEnd):
         self.window.setWindowIcon(QIcon('codificando/imgs/login.png'))
         self.window.setWindowTitle('Login and registration')
         self.window.setStyleSheet('background-color: qlineargradient(spread:pad, x1:0.484, y1:0, x2:0.521, y2:1, stop:0 rgba(0, 170, 250, 255), stop:1 rgba(0, 232, 254, 255));')
+
 
     def frame_register(self):
         self.register = QFrame(self.window)
@@ -229,6 +238,7 @@ class FrontEnd(BackEnd):
         self.create_user.setGeometry(150, 360, 100, 40)
         self.create_user.clicked.connect(self.new_account)
         self.create_user.show()
+
 
     def frame_login(self):
         ##title
@@ -309,5 +319,6 @@ class FrontEnd(BackEnd):
             'color: #4F4F4F'
         )
         self.remember.setGeometry(60, 260, 160, 50) """
+
 
 FrontEnd()

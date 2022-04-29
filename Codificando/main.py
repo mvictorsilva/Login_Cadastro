@@ -1,13 +1,14 @@
 import sys
 from PyQt6.QtWidgets import *
 from PyQt6.QtGui import *
-from PyQt6.QtCore import Qt
+from PyQt6.QtCore import *
 import mysql.connector
 
 
 class BackEnd():
     def connecting_db(self):
-        self.connect = mysql.connector.connect(host='project-kivia.cobnqddvfwys.us-east-1.rds.amazonaws.com', 
+        self.connect = mysql.connector.connect(
+            host='project-kivia.cobnqddvfwys.us-east-1.rds.amazonaws.com', 
             database='project_login', 
             user='mvictordb', 
             password='Victor2004'
@@ -163,14 +164,12 @@ class FrontEnd(BackEnd):
         self.window.setFixedSize(400, 500)
         self.window.setWindowIcon(QIcon('codificando/imgs/login.png'))
         self.window.setWindowTitle('Login and registration')
-        self.window.setStyleSheet(
-            'background-color: qlineargradient(spread:pad, x1:0.484, y1:0, x2:0.521, y2:1, stop:0 rgba(0, 170, 250, 255), stop:1 rgba(0, 232, 254, 255));'
-        )
+        self.window.setStyleSheet('background-color: qlineargradient(spread:pad, x1:0.484, y1:0, x2:0.521, y2:1, stop:0 rgba(0, 170, 250, 255), stop:1 rgba(0, 232, 254, 255));')
 
     def frame_register(self):
         self.register = QFrame(self.window)
         self.register.resize(400, 500)
-        self.register.setStyleSheet('background-color: qlineargradient(spread:pad, x1:0.484, y1:0, x2:0.521, y2:1, stop:0 rgba(0, 170, 250, 255), stop:1 rgba(0, 232, 254, 255));')
+        self.register.setStyleSheet('background-color:qlineargradient(spread:pad, x1:0.484, y1:0, x2:0.521, y2:1,stop:0 rgba(0, 170, 250, 255), stop:1 rgba(0, 232, 254, 255));')
         self.register.show()
 
         self.title_register = QLabel('R E G I S T E R', self.register)
@@ -249,7 +248,7 @@ class FrontEnd(BackEnd):
         #Receive the email
         self.user_login = QLineEdit('', self.window)
         self.user_login.setStyleSheet(
-            'background-color: white;'
+            'background-color: #ffffff;'
             'color: gray;'
             'border-radius: 20px;'
             'font: "Times New Roman";'
